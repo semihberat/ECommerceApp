@@ -1,0 +1,152 @@
+<%- include('../partials/header') %>
+
+    <div class="container my-5">
+        <div class="row">
+            <!-- Sidebar - Categories -->
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Kategoriler</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <a href="/products"
+                            class="list-group-item list-group-item-action <%= (typeof currentCategory === 'undefined' || currentCategory === null) ? 'active' : '' %>">
+                            Tüm Ürünler
+                        </a>
+                        <% if (categories && categories.length> 0) { %>
+                            <% categories.forEach(category=> { %>
+                                <a href="/products/category/<%= category.CategoryID %>"
+                                    class="list-group-item list-group-item-action <%= (typeof currentCategory !== 'undefined' && currentCategory && currentCategory.CategoryID === category.CategoryID) ? 'active' : '' %>">
+                                    <%= category.CategoryName %> (<%= category.ProductCount %>)
+                                </a>
+                                <% }) %>
+                                    <% } %>
+                    </div>
+                </div>
+
+                <!-- Price Filter -->
+                <div class="card mt-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Fiyata Göre Filtrele</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="/products" method="GET">
+                            <div class="mb-3">
+                                <label for="minPrice" class="form-label">Minimum Fiyat</label>
+                                <input type="number" class="form-control" id="minPrice" name="minPrice" min="0">
+                            </div>
+                            <div class="mb-3">
+                                <label for="maxPrice" class="form-label">Maximum Fiyat</label>
+                                <input type="number" class="form-control" id="maxPrice" name="maxPrice" min="0">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Filtrele</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product List -->
+            <div class="col-md-9">
+                <!-- Page Title and Sort Options -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">
+                        <% if (typeof searchTerm !=='undefined' && searchTerm) { %>
+                            Arama Sonuçları: "<%= searchTerm %>"
+                                <% } else if (typeof currentCategory !=='undefined' && currentCategory) { %>
+                                    <%= currentCategory.CategoryName %> Ürünleri
+                                        <% } else { %>
+                                            Tüm Ürünler
+                                            <% } %>
+                    </h2>
+                    <div class="d-flex align-items-center">
+                        <label for="sortOptions" class="me-2">Sırala:</label>
+                        <select class="form-select" id="sortOptions">
+                            <option value="price-asc">Fiyat (Düşükten Yükseğe)</option>
+                            <option value="price-desc">Fiyat (Yüksekten Düşüğe)</option>
+                            <option value="name-asc">İsim (A-Z)</option>
+                            <option value="name-desc">İsim (Z-A)</option>
+                            <option value="rating-desc">En Yüksek Puanlı</option>
+                            <option value="newest">En Yeniler</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Products Grid -->
+                <div class="row" id="products-container">
+                    <% if (products && products.length> 0) { %>
+                        <% products.forEach(product=> { %>
+                            <div class="col-md-4 mb-4 product-item" data-price="<%= product.Price %>"
+                                data-name="<%= product.ProductName %>" data-rating="<%= product.AverageRating || 0 %>"
+                                data-date="<%= product.CreatedAt %>">
+                                <div class="card h-100">
+                                    <img src="<%= product.ProductImage || '/images/placeholder.jpg' %>"
+                                        class="card-img-top" alt="<%= product.ProductName %>">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <%= product.ProductName %>
+                                        </h5>
+                                        <p class="card-text text-truncate">
+                                            <%= product.Description || 'Ürün açıklaması bulunmuyor.' %>
+                                        </p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="price-tag">
+                                                <%= product.Price.toFixed(2) %> TL
+                                            </span>
+                                            <div>
+                                                <% if (product.AverageRating) { %>
+                                                    <div class="ratings">
+                                                        <% for(let i=1; i <=5; i++) { %>
+                                                            <i
+                                                                class="fas fa-star <%= i <= Math.round(product.AverageRating) ? 'text-warning' : 'text-muted' %>"></i>
+                                                            <% } %>
+                                                    </div>
+                                                    <% } %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer d-flex justify-content-between">
+                                        <a href="/products/<%= product.ProductID %>"
+                                            class="btn btn-outline-primary">Detaylar</a>
+                                        <button class="btn btn-primary add-to-cart-btn"
+                                            data-product-id="<%= product.ProductID %>">
+                                            <i class="fas fa-cart-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }) %>
+                                <% } else { %>
+                                    <div class="col-12 text-center py-5">
+                                        <div class="alert alert-warning">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            <% if (typeof searchTerm !=='undefined' && searchTerm) { %>
+                                                "<%= searchTerm %>" için sonuç bulunamadı.
+                                                    <% } else { %>
+                                                        Ürün bulunamadı.
+                                                        <% } %>
+                                        </div>
+                                    </div>
+                                    <% } %>
+                </div>
+
+                <!-- Pagination -->
+                <% if (products && products.length> 0) { %>
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Önceki</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Sonraki</a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <% } %>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>

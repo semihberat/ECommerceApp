@@ -1,0 +1,156 @@
+<%- include('partials/header') %>
+
+    <!-- Hero Section -->
+    <section class="hero bg-light py-5 text-center">
+        <div class="container">
+            <h1 class="display-4">Hoşgeldiniz!</h1>
+            <p class="lead">Uygun fiyatlar ve kaliteli ürünler için doğru adrestesiniz.</p>
+            <a href="/products" class="btn btn-primary btn-lg">Alışverişe Başla</a>
+        </div>
+    </section>
+
+    <!-- Latest Products -->
+    <section class="my-5">
+        <div class="container">
+            <h2 class="text-center mb-4">En Yeni Ürünler</h2>
+            <div class="row">
+                <% if (latestProducts && latestProducts.length> 0) { %>
+                    <% latestProducts.forEach(product=> { %>
+                        <div class="col-md-3 mb-4">
+                            <div class="card h-100">
+                                <img src="<%= product.ProductImage || '/images/placeholder.jpg' %>" class="card-img-top"
+                                    alt="<%= product.ProductName %>">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <%= product.ProductName %>
+                                    </h5>
+                                    <p class="card-text text-truncate">
+                                        <%= product.Description || 'Ürün açıklaması bulunmuyor.' %>
+                                    </p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="price-tag">
+                                            <%= product.Price.toFixed(2) %> TL
+                                        </span>
+                                        <div>
+                                            <% if (product.AverageRating) { %>
+                                                <div class="ratings">
+                                                    <% for(let i=1; i <=5; i++) { %>
+                                                        <i
+                                                            class="fas fa-star <%= i <= Math.round(product.AverageRating) ? 'text-warning' : 'text-muted' %>"></i>
+                                                        <% } %>
+                                                </div>
+                                                <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer d-flex justify-content-between">
+                                    <a href="/products/<%= product.ProductID %>"
+                                        class="btn btn-outline-primary">Detaylar</a>
+                                    <button class="btn btn-primary add-to-cart-btn"
+                                        data-product-id="<%= product.ProductID %>">
+                                        <i class="fas fa-cart-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                            <% } else { %>
+                                <div class="col-12 text-center">
+                                    <p>Henüz ürün eklenmemiş.</p>
+                                </div>
+                                <% } %>
+            </div>
+            <div class="text-center mt-4">
+                <a href="/products" class="btn btn-outline-primary">Tüm Ürünleri Gör</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Categories -->
+    <section class="bg-light py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Kategoriler</h2>
+            <div class="row">
+                <% if (categories && categories.length> 0) { %>
+                    <% categories.slice(0, 4).forEach(category=> { %>
+                        <div class="col-md-3 mb-4">
+                            <div class="card text-center h-100">
+                                <div class="card-body">
+                                    <i class="fas fa-folder category-icon mb-3"></i>
+                                    <h5 class="card-title">
+                                        <%= category.CategoryName %>
+                                    </h5>
+                                    <p class="card-text">
+                                        <%= category.ProductCount %> ürün
+                                    </p>
+                                    <a href="/products/category/<%= category.CategoryID %>"
+                                        class="btn btn-outline-primary">Göster</a>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                            <% } else { %>
+                                <div class="col-12 text-center">
+                                    <p>Henüz kategori eklenmemiş.</p>
+                                </div>
+                                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Products -->
+    <section class="my-5">
+        <div class="container">
+            <h2 class="text-center mb-4">En Çok Satan Ürünler</h2>
+            <div class="row">
+                <% if (popularProducts && popularProducts.length> 0) { %>
+                    <% popularProducts.forEach(product=> { %>
+                        <div class="col-md-3 mb-4">
+                            <div class="card h-100">
+                                <div class="badge bg-danger position-absolute top-0 end-0 m-2">En Çok Satan</div>
+                                <img src="<%= product.ProductImage || '/images/placeholder.jpg' %>" class="card-img-top"
+                                    alt="<%= product.ProductName %>">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <%= product.ProductName %>
+                                    </h5>
+                                    <p class="card-text text-truncate">
+                                        <%= product.Description || 'Ürün açıklaması bulunmuyor.' %>
+                                    </p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="price-tag">
+                                            <%= product.Price.toFixed(2) %> TL
+                                        </span>
+                                        <div>
+                                            <% if (product.AverageRating) { %>
+                                                <div class="ratings">
+                                                    <% for(let i=1; i <=5; i++) { %>
+                                                        <i
+                                                            class="fas fa-star <%= i <= Math.round(product.AverageRating) ? 'text-warning' : 'text-muted' %>"></i>
+                                                        <% } %>
+                                                </div>
+                                                <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer d-flex justify-content-between">
+                                    <a href="/products/<%= product.ProductID %>"
+                                        class="btn btn-outline-primary">Detaylar</a>
+                                    <button class="btn btn-primary add-to-cart-btn"
+                                        data-product-id="<%= product.ProductID %>">
+                                        <i class="fas fa-cart-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                            <% } else { %>
+                                <div class="col-12 text-center">
+                                    <p>Henüz popüler ürün bulunmuyor.</p>
+                                </div>
+                                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <%- include('partials/footer') %>

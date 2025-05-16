@@ -1,0 +1,285 @@
+<%- include('../partials/header') %>
+
+    <div class="container my-5">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Ana Sayfa</a></li>
+                <li class="breadcrumb-item"><a href="/products">Ürünler</a></li>
+                <% if (product.Categories) { %>
+                    <% const categoryList=product.Categories.split(', '); %>
+                <% if (categoryList.length > 0) { %>
+                    <li class="breadcrumb-item"><a href="/products/category/<%= categoryList[0].CategoryID %>"><%= categoryList[0] %></a></li>
+                <% } %>
+            <% } %>
+            <li class="breadcrumb-item active" aria-current="page"><%= product.ProductName %></li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Product Images -->
+        <div class="col-md-5 mb-4">
+            <div class="card">
+                <img src="<%= product.ProductImage || ' /images/placeholder.jpg' %>" class="card-img-top" alt="<%=
+                            product.ProductName %>">
+                            <div class="card-body px-0 pt-2 pb-0">
+                                <div class="row small-images">
+                                    <div class="col-3">
+                                        <img src="<%= product.ProductImage || '/images/placeholder.jpg' %>"
+                                            class="img-thumbnail active" alt="<%= product.ProductName %>">
+                                    </div>
+                                    <div class="col-3">
+                                        <img src="/images/placeholder.jpg" class="img-thumbnail"
+                                            alt="<%= product.ProductName %>">
+                                    </div>
+                                    <div class="col-3">
+                                        <img src="/images/placeholder.jpg" class="img-thumbnail"
+                                            alt="<%= product.ProductName %>">
+                                    </div>
+                                    <div class="col-3">
+                                        <img src="/images/placeholder.jpg" class="img-thumbnail"
+                                            alt="<%= product.ProductName %>">
+                                    </div>
+                                </div>
+                            </div>
+    </div>
+    </div>
+
+    <!-- Product Details -->
+    <div class="col-md-7">
+        <h1 class="mb-3">
+            <%= product.ProductName %>
+        </h1>
+
+        <div class="d-flex align-items-center mb-3">
+            <% if (product.AverageRating) { %>
+                <div class="ratings me-2">
+                    <% for(let i=1; i <=5; i++) { %>
+                        <i
+                            class="fas fa-star <%= i <= Math.round(product.AverageRating) ? 'text-warning' : 'text-muted' %>"></i>
+                        <% } %>
+                </div>
+                <span class="text-muted">(<%= product.ReviewCount %> değerlendirme)</span>
+                <% } else { %>
+                    <div class="ratings me-2">
+                        <% for(let i=1; i <=5; i++) { %>
+                            <i class="fas fa-star text-muted"></i>
+                            <% } %>
+                    </div>
+                    <span class="text-muted">(Henüz değerlendirme yok)</span>
+                    <% } %>
+        </div>
+
+        <div class="mb-3">
+            <span class="text-muted">Kategoriler: </span>
+            <% if (product.Categories) { %>
+                <% const categoryList=product.Categories.split(', '); %>
+                    <% categoryList.forEach((category, index) => { %>
+                        <a href="/products/category/<%= category.CategoryID %>" class="badge bg-primary text-decoration-none"><%= category %></a>
+                    <% }); %>
+                <% } else { %>
+                    <span>Kategori bilgisi yok</span>
+                <% } %>
+            </div>
+            
+            <p class="mb-4"><%= product.Description || ' Bu ürün için açıklama bulunmuyor.' %>
+                    </p>
+
+                    <div class="price-box mb-4">
+                        <h3 class="text-primary">
+                            <%= (typeof product.Price==='number' ? product.Price.toFixed(2) :
+                                parseFloat(product.Price).toFixed(2)) %> TL
+                        </h3>
+                        <% if (product.Stock> 0) { %>
+                            <span class="badge bg-success">Stokta</span>
+                            <% } else { %>
+                                <span class="badge bg-danger">Stokta Yok</span>
+                                <% } %>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="input-group mb-3" style="max-width: 200px;">
+                            <button class="btn btn-outline-secondary" type="button" id="decrease-qty">-</button>
+                            <input type="number" class="form-control text-center" id="product-qty" value="1" min="1"
+                                max="<%= product.Stock %>">
+                            <button class="btn btn-outline-secondary" type="button" id="increase-qty">+</button>
+                        </div>
+
+                        <button id="add-to-cart" class="btn btn-primary me-2"
+                            data-product-id="<%= product.ProductID %>">
+                            <i class="fas fa-cart-plus me-2"></i>Sepete Ekle
+                        </button>
+                        <button id="add-to-wishlist" class="btn btn-outline-danger"
+                            data-product-id="<%= product.ProductID %>">
+                            <i class="fas fa-heart me-2"></i>Favorilere Ekle
+                        </button>
+                    </div>
+
+                    <div class="shipping-info p-3 bg-light rounded">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-truck fa-2x text-primary me-2"></i>
+                                    <div>
+                                        <h6 class="mb-0">Hızlı Teslimat</h6>
+                                        <small>2-4 iş günü</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-undo fa-2x text-primary me-2"></i>
+                                    <div>
+                                        <h6 class="mb-0">Kolay İade</h6>
+                                        <small>14 gün içinde</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-lock fa-2x text-primary me-2"></i>
+                                    <div>
+                                        <h6 class="mb-0">Güvenli Ödeme</h6>
+                                        <small>SSL korumalı</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        </div>
+    </div>
+
+    <!-- Product Tabs -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <ul class="nav nav-tabs" id="productTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
+                        data-bs-target="#description" type="button" role="tab" aria-controls="description"
+                        aria-selected="true">Açıklama</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="specs-tab" data-bs-toggle="tab" data-bs-target="#specs" type="button"
+                        role="tab" aria-controls="specs" aria-selected="false">Özellikler</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews"
+                        type="button" role="tab" aria-controls="reviews" aria-selected="false">Değerlendirmeler (<%=
+                            product.ReviewCount || 0 %>)</button>
+                </li>
+            </ul>
+            <div class="tab-content p-4 border border-top-0 rounded-bottom" id="productTabsContent">
+                <div class="tab-pane fade show active" id="description" role="tabpanel"
+                    aria-labelledby="description-tab">
+                    <p>
+                        <%= product.Description || 'Bu ürün için detaylı açıklama bulunmuyor.' %>
+                    </p>
+                </div>
+                <div class="tab-pane fade" id="specs" role="tabpanel" aria-labelledby="specs-tab">
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <td>Ürün Adı</td>
+                                <td>
+                                    <%= product.ProductName %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Stok Durumu</td>
+                                <td>
+                                    <%= product.Stock %> adet
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Ürün Kodu</td>
+                                <td>PRD-<%= product.ProductID %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Kategoriler</td>
+                                <td>
+                                    <%= product.Categories || 'Belirtilmemiş' %>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                    <% if (product.ReviewCount && product.ReviewCount> 0) { %>
+                        <!-- Reviews will be loaded here -->
+                        <div class="reviews-container">
+                            <div class="text-center py-4">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Yükleniyor...</span>
+                                </div>
+                            </div>
+                        </div>
+                        <% } else { %>
+                            <div class="alert alert-info">
+                                Bu ürün için henüz değerlendirme yapılmamış.
+                            </div>
+                            <% } %>
+
+                                <hr>
+
+                                <!-- Review Form -->
+                                <% if (locals.isAuthenticated) { %>
+                                    <h4 class="mb-3">Değerlendirme Yap</h4>
+                                    <form id="review-form">
+                                        <input type="hidden" name="productId" value="<%= product.ProductID %>">
+                                        <div class="mb-3">
+                                            <label class="form-label">Puan</label>
+                                            <div class="rating-select">
+                                                <i class="far fa-star rating-star" data-rating="1"></i>
+                                                <i class="far fa-star rating-star" data-rating="2"></i>
+                                                <i class="far fa-star rating-star" data-rating="3"></i>
+                                                <i class="far fa-star rating-star" data-rating="4"></i>
+                                                <i class="far fa-star rating-star" data-rating="5"></i>
+                                            </div>
+                                            <input type="hidden" name="rating" id="review-rating" value="">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="review-comment" class="form-label">Yorumunuz</label>
+                                            <textarea class="form-control" id="review-comment" name="comment" rows="3"
+                                                required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Gönder</button>
+                                    </form>
+                                    <% } else { %>
+                                        <div class="alert alert-warning">
+                                            Değerlendirme yapmak için <a href="/users/login">giriş yapmalısınız</a>.
+                                        </div>
+                                        <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    <div class="related-products mt-5">
+        <h3 class="mb-4">Benzer Ürünler</h3>
+        <div class="row">
+            <!-- Related products will be loaded here -->
+            <div class="col-md-3 mb-4">
+                <div class="card h-100">
+                    <img src="/images/placeholder.jpg" class="card-img-top" alt="Related Product">
+                    <div class="card-body">
+                        <h5 class="card-title">Örnek Ürün</h5>
+                        <p class="card-text text-truncate">Örnek ürün açıklaması.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="price-tag">99.99 TL</span>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="#" class="btn btn-outline-primary">Detaylar</a>
+                        <button class="btn btn-primary add-to-cart-btn">
+                            <i class="fas fa-cart-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Repeat for more related products -->
+        </div>
+    </div>
+    </div>
+
+    <%- include('../partials/footer') %>

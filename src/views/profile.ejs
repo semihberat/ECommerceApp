@@ -1,0 +1,100 @@
+<%- include('partials/header') %>
+
+    <div class="container my-5">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Hesabım</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <a href="/users/profile" class="list-group-item list-group-item-action active">
+                            <i class="fas fa-user-circle me-2"></i> Profilim
+                        </a>
+                        <a href="/orders/my-orders" class="list-group-item list-group-item-action">
+                            <i class="fas fa-shopping-bag me-2"></i> Siparişlerim
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="fas fa-map-marker-alt me-2"></i> Adreslerim
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="fas fa-heart me-2"></i> Favorilerim
+                        </a>
+                        <a href="/users/logout" class="list-group-item list-group-item-action text-danger">
+                            <i class="fas fa-sign-out-alt me-2"></i> Çıkış Yap
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Content -->
+            <div class="col-md-9">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Profil Bilgilerim</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="/users/profile" method="POST">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Kullanıcı Adı</label>
+                                <input type="text" class="form-control" id="username" name="username"
+                                    value="<%= user.UserName %>" required>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="firstName" class="form-label">Ad</label>
+                                    <input type="text" class="form-control" id="firstName" name="firstName"
+                                        value="<%= user.FirstName || '' %>">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="lastName" class="form-label">Soyad</label>
+                                    <input type="text" class="form-control" id="lastName" name="lastName"
+                                        value="<%= user.LastName || '' %>">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">E-posta Adresi</label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                    value="<%= user.Email %>" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="phoneNumber" class="form-label">Telefon Numarası</label>
+                                <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber"
+                                    value="<%= user.PhoneNumber || '' %>">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Bilgilerimi Güncelle</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Şifre Değiştir</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="/users/change-password" method="POST">
+                            <div class="mb-3">
+                                <label for="currentPassword" class="form-label">Mevcut Şifre</label>
+                                <input type="password" class="form-control" id="currentPassword" name="currentPassword"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="newPassword" class="form-label">Yeni Şifre</label>
+                                <input type="password" class="form-control" id="newPassword" name="newPassword"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">Yeni Şifre Tekrar</label>
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                                    required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Şifremi Değiştir</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>

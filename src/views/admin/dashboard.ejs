@@ -1,0 +1,152 @@
+<!-- filepath: /home/semih/ecommercev2/src/views/admin/dashboard.ejs -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Dashboard</h2>
+    <span class="badge bg-secondary">Son Giriş: <%= new Date(admin.LastLogin).toLocaleString() %></span>
+</div>
+
+<% if (locals.error) { %>
+    <div class="alert alert-danger">
+        <%= error %>
+    </div>
+    <% } %>
+
+        <!-- İstatistikler -->
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="card text-white bg-primary">
+                    <div class="card-body">
+                        <h5 class="card-title">Ürünler</h5>
+                        <p class="card-text display-6">
+                            <%= stats.productCount %>
+                        </p>
+                        <a href="/admin/products" class="text-white text-decoration-none">Detaylar <i
+                                class="bi bi-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <div class="card text-white bg-success">
+                    <div class="card-body">
+                        <h5 class="card-title">Siparişler</h5>
+                        <p class="card-text display-6">
+                            <%= stats.orderCount %>
+                        </p>
+                        <a href="/admin/orders" class="text-white text-decoration-none">Detaylar <i
+                                class="bi bi-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <div class="card text-white bg-info">
+                    <div class="card-body">
+                        <h5 class="card-title">Kullanıcılar</h5>
+                        <p class="card-text display-6">
+                            <%= stats.userCount %>
+                        </p>
+                        <a href="/admin/users" class="text-white text-decoration-none">Detaylar <i
+                                class="bi bi-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <div class="card text-white bg-warning">
+                    <div class="card-body">
+                        <h5 class="card-title">Kategoriler</h5>
+                        <p class="card-text display-6">
+                            <%= stats.categoryCount %>
+                        </p>
+                        <a href="/admin/categories" class="text-white text-decoration-none">Detaylar <i
+                                class="bi bi-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Son Siparişler -->
+        <div class="row mb-4">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Son Siparişler</h5>
+                    </div>
+                    <div class="card-body">
+                        <% if (recentOrders && recentOrders.length> 0) { %>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Kullanıcı</th>
+                                            <th>Tarih</th>
+                                            <th>Tutar</th>
+                                            <th>Durum</th>
+                                            <th>İşlem</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% recentOrders.forEach(order=> { %>
+                                            <tr>
+                                                <td>#<%= order.OrderID %>
+                                                </td>
+                                                <td>
+                                                    <%= order.UserName %>
+                                                </td>
+                                                <td>
+                                                    <%= new Date(order.OrderDate).toLocaleDateString() %>
+                                                </td>
+                                                <td>₺<%= order.TotalAmount.toFixed(2) %>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-<%= order.OrderStatus === 'Delivered' ? 'success' : 
+                                                            order.OrderStatus === 'Cancelled' ? 'danger' :
+                                                            order.OrderStatus === 'Processing' ? 'primary' :
+                                                            order.OrderStatus === 'Shipped' ? 'info' : 'warning' %>">
+                                                        <%= order.OrderStatus %>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <a href="/admin/orders/<%= order.OrderID %>"
+                                                        class="btn btn-sm btn-outline-primary">
+                                                        Detay
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <% } else { %>
+                                <p class="text-center my-3">Henüz sipariş bulunmamaktadır.</p>
+                                <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Düşük Stok Uyarısı -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Düşük Stok Uyarısı</h5>
+                    </div>
+                    <div class="card-body">
+                        <% if (lowStockProducts && lowStockProducts.length> 0) { %>
+                            <ul class="list-group">
+                                <% lowStockProducts.forEach(product=> { %>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <%= product.ProductName %>
+                                            <span class="badge bg-danger rounded-pill">
+                                                <%= product.Stock %> kaldı
+                                            </span>
+                                    </li>
+                                    <% }); %>
+                            </ul>
+                            <% } else { %>
+                                <p class="text-center my-3">Stok durumu iyi görünüyor!</p>
+                                <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>

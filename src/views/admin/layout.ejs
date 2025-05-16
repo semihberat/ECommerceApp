@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %> - E-Ticaret Admin
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .sidebar {
+            min-height: calc(100vh - 56px);
+            background-color: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .nav-link {
+            color: #495057;
+        }
+
+        .nav-link.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        .nav-link:hover {
+            background-color: #e9ecef;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <% if (admin) { %>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/admin/dashboard">E-Ticaret Admin</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/" target="_blank">
+                                <i class="bi bi-house"></i> Siteyi Görüntüle
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-bs-toggle="dropdown">
+                                <i class="bi bi-person-circle"></i>
+                                <%= admin.AdminName %>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="/admin/change-password">Şifre Değiştir</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="/admin/logout">Çıkış Yap</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-md-3 col-lg-2 px-0 sidebar">
+                    <div class="list-group list-group-flush pt-3">
+                        <a href="/admin/dashboard" class="list-group-item list-group-item-action">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                        <a href="/admin/products" class="list-group-item list-group-item-action">
+                            <i class="bi bi-box"></i> Ürünler
+                        </a>
+                        <a href="/admin/categories" class="list-group-item list-group-item-action">
+                            <i class="bi bi-tags"></i> Kategoriler
+                        </a>
+                        <a href="/admin/orders" class="list-group-item list-group-item-action">
+                            <i class="bi bi-cart3"></i> Siparişler
+                        </a>
+                        <a href="/admin/users" class="list-group-item list-group-item-action">
+                            <i class="bi bi-people"></i> Kullanıcılar
+                        </a>
+                        <% if (admin.Role==='SuperAdmin' ) { %>
+                            <a href="/admin/admins" class="list-group-item list-group-item-action">
+                                <i class="bi bi-person-badge"></i> Adminler
+                            </a>
+                            <% } %>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content">
+                    <%- body %>
+                </main>
+            </div>
+        </div>
+        <% } else { %>
+            <!-- Login sayfası için basit layout -->
+            <div class="container mt-5">
+                <%- body %>
+            </div>
+            <% } %>
+
+                <script
+                    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+
+</html>

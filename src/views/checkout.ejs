@@ -1,0 +1,249 @@
+<%- include('partials/header') %>
+
+    <div class="container my-5">
+        <h1 class="mb-4">Siparişi Tamamla</h1>
+
+        <!-- Ödeme Adımları -->
+        <div class="checkout-steps mb-4">
+            <div class="checkout-step">
+                <span class="step-number">1</span>
+                <div>Sepet</div>
+            </div>
+            <div class="checkout-step active">
+                <span class="step-number">2</span>
+                <div>Teslimat & Ödeme</div>
+            </div>
+            <div class="checkout-step">
+                <span class="step-number">3</span>
+                <div>Onay</div>
+            </div>
+        </div>
+
+        <form action="/orders/create" method="POST" id="checkout-form">
+            <div class="row">
+                <!-- Teslimat ve Ödeme Bilgileri -->
+                <div class="col-lg-8">
+                    <!-- Teslimat Bilgileri -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Teslimat Bilgileri</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="firstName" class="form-label">Ad</label>
+                                    <input type="text" class="form-control" id="firstName" name="firstName" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="lastName" class="form-label">Soyad</label>
+                                    <input type="text" class="form-control" id="lastName" name="lastName" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">E-posta</label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                    value="<%= user ? user.email : '' %>" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Telefon</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Adres</label>
+                                <textarea class="form-control" id="address" name="shippingAddress" rows="3"
+                                    required></textarea>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="city" class="form-label">Şehir</label>
+                                    <input type="text" class="form-control" id="city" name="city" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="state" class="form-label">İlçe</label>
+                                    <input type="text" class="form-control" id="state" name="state" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="zip" class="form-label">Posta Kodu</label>
+                                    <input type="text" class="form-control" id="zip" name="zip" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ödeme Bilgileri -->
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Ödeme Bilgileri</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Ödeme Yöntemi</label>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="paymentMethod"
+                                                id="creditCard" value="creditCard" checked>
+                                            <label class="form-check-label" for="creditCard">
+                                                <i class="far fa-credit-card me-2"></i>Kredi Kartı
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="paymentMethod"
+                                                id="paypal" value="paypal">
+                                            <label class="form-check-label" for="paypal">
+                                                <i class="fab fa-paypal me-2"></i>PayPal
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="paymentMethod"
+                                                id="cashOnDelivery" value="cashOnDelivery">
+                                            <label class="form-check-label" for="cashOnDelivery">
+                                                <i class="fas fa-money-bill-wave me-2"></i>Kapıda Ödeme
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Kredi Kartı Bilgileri -->
+                            <div id="creditCardDetails">
+                                <div class="mb-3">
+                                    <label for="cardNumber" class="form-label">Kart Numarası</label>
+                                    <input type="text" class="form-control" id="cardNumber"
+                                        placeholder="**** **** **** ****">
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="cardName" class="form-label">Kart Üzerindeki İsim</label>
+                                        <input type="text" class="form-control" id="cardName">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="expiryDate" class="form-label">Son Kullanma Tarihi</label>
+                                        <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="cvv" class="form-label">CVV</label>
+                                        <input type="text" class="form-control" id="cvv" placeholder="***">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sipariş Özeti -->
+                <div class="col-lg-4">
+                    <div class="card order-summary-card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Sipariş Özeti</h5>
+                        </div>
+                        <div class="card-body">
+                            <% if (checkoutItems && checkoutItems.length> 0) { %>
+                                <% checkoutItems.forEach(item=> { %>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>
+                                            <%= item.product.ProductName %> x <%= item.quantity %>
+                                        </span>
+                                        <span>
+                                            <%= item.total.toFixed(2) %> TL
+                                        </span>
+                                    </div>
+                                    <% }); %>
+                                        <hr>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Ara Toplam:</span>
+                                            <span>
+                                                <%= totalAmount.toFixed(2) %> TL
+                                            </span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Kargo:</span>
+                                            <% const shipping=totalAmount> 0 && totalAmount < 50 ? 15 : 0; %>
+                                                    <span>
+                                                        <%= shipping> 0 ? shipping.toFixed(2) + ' TL' : 'Ücretsiz' %>
+                                                    </span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-3">
+                                            <span>KDV (18%):</span>
+                                            <% const tax=totalAmount * 0.18; %>
+                                                <span>
+                                                    <%= tax.toFixed(2) %> TL
+                                                </span>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex justify-content-between mb-3">
+                                            <strong>Toplam:</strong>
+                                            <strong>
+                                                <%= (totalAmount + shipping + tax).toFixed(2) %> TL
+                                            </strong>
+                                        </div>
+                                        <% } else { %>
+                                            <p>Sepetinizde ürün bulunmuyor.</p>
+                                            <% } %>
+
+                                                <!-- Ürün ID'leri ve miktarlarını gizli alanlara ekle -->
+                                                <% if (checkoutItems && checkoutItems.length> 0) { %>
+                                                    <% checkoutItems.forEach(item=> { %>
+                                                        <input type="hidden" name="products[]"
+                                                            value="<%= item.product.ProductID %>">
+                                                        <input type="hidden" name="quantities[]"
+                                                            value="<%= item.quantity %>">
+                                                        <% }); %>
+                                                            <% } %>
+
+                                                                <div class="form-check mb-3">
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        id="terms" required>
+                                                                    <label class="form-check-label" for="terms">
+                                                                        <a href="/terms" target="_blank">Kullanım
+                                                                            Şartları</a>'nı ve <a href="/privacy"
+                                                                            target="_blank">Gizlilik Politikası</a>'nı
+                                                                        okudum ve kabul ediyorum.
+                                                                    </label>
+                                                                </div>
+
+                                                                <button type="submit" class="btn btn-primary w-100"
+                                                                    <%=checkoutItems && checkoutItems.length> 0 ? '' :
+                                                                    'disabled' %>>
+                                                                    Siparişi Tamamla
+                                                                </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Ödeme yöntemi seçimi
+            const paymentMethodRadios = document.querySelectorAll('input[name="paymentMethod"]');
+            const creditCardDetails = document.getElementById('creditCardDetails');
+
+            paymentMethodRadios.forEach(radio => {
+                radio.addEventListener('change', function () {
+                    if (this.value === 'creditCard') {
+                        creditCardDetails.style.display = 'block';
+                    } else {
+                        creditCardDetails.style.display = 'none';
+                    }
+                });
+            });
+
+            // Form doğrulama
+            const checkoutForm = document.getElementById('checkout-form');
+            if (checkoutForm) {
+                checkoutForm.addEventListener('submit', function (event) {
+                    // Form doğrulama işlemleri burada yapılabilir
+                    // Örnek: Kart bilgilerinin doğruluğu, adres alanlarının doluluğu vb.
+                    // Başarısız doğrulama durumunda: event.preventDefault();
+                });
+            }
+        });
+    </script>
+
+    <%- include('partials/footer') %>
