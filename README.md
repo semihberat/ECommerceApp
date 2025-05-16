@@ -1,5 +1,8 @@
 # E-Ticaret Uygulaması
 
+![Uploading image.png…]()
+
+
 Bu proje, Node.js ve Express.js kullanılarak geliştirilmiş, MySQL veritabanına dayanan tam işlevsel bir e-ticaret platformudur.
 
 ## Proje Genel Bakış
